@@ -1,27 +1,23 @@
 {
   "expo": {
-    "name": "my-app",
-    "slug": "my-app",
-    "version": "1.0.0",
+    "name": "Pahadi Khabarnama",
+    "slug": "pahadi-khabarnama",
+    "version": "1.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
-    "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
-    "ios": {
-      "supportsTablet": true
-    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      }
+      "package": "in.pahadikhabarnama.myapp",
+      "versionCode": 2
     },
-    "web": {
-      "favicon": "./assets/favicon.png"
+    "ios": {},
+    "extra": {
+      "eas": {
+        "projectId": "31757fd8-83fb-44f0-85d8-6cba985d3f9f"
+      }
     }
   }
 }
