@@ -64,10 +64,10 @@ export default function PhotoNews() {
   };
 
   return (
-    <SafeAreaView className=" flex-1 bg-white dark:bg-neutral-900">
+    <SafeAreaView style={styles.safeAreaView}>
       <StatusBar style={colorScheme == "dark" ? "light" : "dark"} />
-      <View style={{ flex: 1 }}>
-        <View style={{ zIndex: 999 }}>
+      <View style={styles.container}>
+        <View style={styles.headerContainer}>
           <Header />
         </View>
         <View>
@@ -75,21 +75,14 @@ export default function PhotoNews() {
           {isPhotosLoading ? (
             <Loading />
           ) : (
-            <ScrollView contentContainerStyle={{ paddingBottom: hp(20) }}>
+            <ScrollView contentContainerStyle={styles.scrollView}>
               {/* Render the list of images */}
               {Object.keys(photos).map((groupIndex, index) => (
                 <TouchableOpacity
                   key={index}
                   onPress={() => handleOpenImage(groupIndex)}
                 >
-                  <View
-                    style={{
-                      position: "relative",
-                      width: "100%",
-                      height: 200,
-                      marginBottom: 10,
-                    }}
-                  >
+                  <View style={styles.imageContainer}>
                     {/* Thumbnail */}
                     <Image
                       source={{
@@ -97,37 +90,14 @@ export default function PhotoNews() {
                           photos[groupIndex][0].photoUrl ||
                           "https://images.unsplash.com/photo-1495020689067-958852a7765e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8bmV3c3xlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60",
                       }}
-                      style={{ width: "100%", height: "100%", opacity: 0.8 }}
+                      style={styles.thumbnail}
                     />
                     {/* Total number of photos and published date */}
-                    <View
-                      style={{
-                        position: "absolute",
-                        height: 200,
-                        width: "100%",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        backgroundColor: "rgba(0, 0, 0, 0.5)",
-                        paddingHorizontal: 10,
-                        paddingVertical: 5,
-                      }}
-                    >
-                      <Text
-                        style={{
-                          color: "white",
-                          fontWeight: "bold",
-                          textAlign: "center",
-                        }}
-                      >
+                    <View style={styles.infoContainer}>
+                      <Text style={styles.infoText}>
                         Total Photos: {photos[groupIndex].length}
                       </Text>
-                      <Text
-                        style={{
-                          color: "white",
-                          fontWeight: "bold",
-                          textAlign: "center",
-                        }}
-                      >
+                      <Text style={styles.infoText}>
                         Published Date: {photos[groupIndex][0].publishedAt}
                       </Text>
                     </View>
@@ -139,36 +109,75 @@ export default function PhotoNews() {
         </View>
       </View>
 
-    {/* Fullscreen Image Modal */}
-    <Modal
-      animationType="slide"
-      transparent={true}
-      visible={modalVisible}
-      onRequestClose={handleCloseModal}
-    >
-      <View style={styles.modalContent}>
-        <Image
-          source={{ uri: selectedImages[selectedImageIndex] }}
-          style={styles.fullScreenImage}
-        />
-        <View style={styles.buttonsContainer}>
-          <TouchableOpacity onPress={handlePreviousImage}>
-            <Icon name="chevron-left" size={30} color="white" />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={handleCloseModal}>
-            <Icon name="times" size={30} color="white" />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={handleNextImage}>
-            <Icon name="chevron-right" size={30} color="white" />
-          </TouchableOpacity>
+      {/* Fullscreen Image Modal */}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={handleCloseModal}
+      >
+        <View style={styles.modalContent}>
+          <Image
+            source={{ uri: selectedImages[selectedImageIndex] }}
+            style={styles.fullScreenImage}
+          />
+          <View style={styles.buttonsContainer}>
+            <TouchableOpacity onPress={handlePreviousImage}>
+              <Icon name="chevron-left" size={hp(3)} color="white" />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={handleCloseModal}>
+              <Icon name="times" size={hp(3)} color="white" />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={handleNextImage}>
+              <Icon name="chevron-right" size={hp(3)} color="white" />
+            </TouchableOpacity>
+          </View>
         </View>
-      </View>
-    </Modal>
+      </Modal>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  safeAreaView: {
+    flex: 1,
+    backgroundColor: 'white',
+  },
+  container: {
+    flex: 1,
+  },
+  headerContainer: {
+    zIndex: 999,
+  },
+  scrollView: {
+    paddingBottom: hp(20),
+  },
+  imageContainer: {
+    position: "relative",
+    width: "100%",
+    height: hp(25),
+    marginBottom: 10,
+  },
+  thumbnail: {
+    width: "100%",
+    height: "100%",
+    opacity: 0.8,
+  },
+  infoContainer: {
+    position: "absolute",
+    height: hp(25),
+    width: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+  },
+  infoText: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center",
+  },
   modalContent: {
     flex: 1,
     backgroundColor: "rgba(0, 0, 0, 0.9)",
@@ -182,7 +191,7 @@ const styles = StyleSheet.create({
   },
   buttonsContainer: {
     position: "absolute",
-    top: 50,
+    top: hp(5),
     left: 0,
     right: 0,
     flexDirection: "row",

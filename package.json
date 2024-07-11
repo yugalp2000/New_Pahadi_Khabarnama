@@ -24,7 +24,7 @@
     "@tanstack/react-query": "^4.35.3",
     "axios": "^1.5.1",
     "eas-cli": "^7.6.2",
-    "expo": "^51.0.14",
+    "expo": "^51.0.19",
     "expo-av": "^14.0.6",
     "expo-font": "^12.0.7",
     "expo-linear-gradient": "~13.0.2",
@@ -46,8 +46,7 @@
     "react-native-snap-carousel": "^4.0.0-beta.6",
     "react-native-svg": "15.2.0",
     "react-native-vector-icons": "^10.0.0",
-    "react-native-webview": "13.8.6",
-    "tailwindcss": "^3.3.2"
+    "react-native-webview": "13.8.6"
   },
   "devDependencies": {
     "@babel/core": "^7.24.0"

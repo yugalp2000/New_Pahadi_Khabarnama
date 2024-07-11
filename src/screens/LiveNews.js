@@ -1,4 +1,4 @@
-import { View, ScrollView } from "react-native";
+import { View, ScrollView, StyleSheet } from "react-native";
 import React, { useState } from "react";
 import Loading from "../components/Loading";
 import { categories } from "../constants";
@@ -11,30 +11,31 @@ import { useColorScheme } from "nativewind";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function LiveNews() {
-  const [recommendedNews, SetRecommendedNews] = useState([]);
+  const [recommendedNews, setRecommendedNews] = useState([]);
   const { colorScheme, toggleColorScheme } = useColorScheme();
 
   const loadMoreData = async () => {
     // Fetch more data and append it to the existing newsMain array
     const moreData = await fetchMoreNewsData(); // Implement this function to fetch more data
-    SetRecommendedNews((prevData) => [...prevData, ...moreData]);
+    setRecommendedNews((prevData) => [...prevData, ...moreData]);
   };
 
   return (
-    <SafeAreaView className=" flex-1 bg-white dark:bg-neutral-900">
+    <SafeAreaView style={styles.safeAreaView}>
       <StatusBar style={colorScheme == "dark" ? "light" : "dark"} />
 
-      <View>
-        <View style={{ zIndex: 999 }}>
+      <View style={styles.container}>
+        <View style={styles.headerContainer}>
           <Header />
         </View>
         <View>
           <MiniHeader label="लाइव" />
-          <ScrollView contentContainerStyle={{ paddingBottom: hp(80) }}>
+          <ScrollView contentContainerStyle={styles.scrollViewContent}>
             <NewsSection
               label="Recommendation"
               categories={categories}
               newsMain={recommendedNews}
+              loadMoreData={loadMoreData}
             />
           </ScrollView>
         </View>
@@ -42,3 +43,20 @@ export default function LiveNews() {
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  safeAreaView: {
+    flex: 1,
+    backgroundColor: 'white',
+  },
+  container: {
+    flex: 1,
+    backgroundColor: 'white',
+  },
+  headerContainer: {
+    zIndex: 999,
+  },
+  scrollViewContent: {
+    paddingBottom: hp(80),
+  },
+});

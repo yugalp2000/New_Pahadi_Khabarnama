@@ -3,10 +3,8 @@ import {
   View,
   Text,
   Image,
-  ScrollView,
   StyleSheet,
   TouchableOpacity,
-  Linking,
 } from "react-native";
 import { ChevronLeftIcon } from "react-native-heroicons/outline";
 import { useNavigation } from "@react-navigation/native";
@@ -17,10 +15,10 @@ export default function PageHeader() {
 
   return (
     <>
-      <View className="w-full flex-row justify-between items-center px-4 pt-10 pb-4 bg-white pb-4 bg-white">
-        <View className="bg-gray-100 p-2 rounded-full items-center justify-center">
+      <View style={styles.headerContainer}>
+        <View style={styles.backButtonContainer}>
           <TouchableOpacity onPress={() => navigation.goBack()}>
-            <ChevronLeftIcon size={25} strokeWidth={3} color="gray" />
+            <ChevronLeftIcon size={hp(3.4)} strokeWidth={hp(0.4)} color="gray" />
           </TouchableOpacity>
         </View>
       </View>
@@ -40,15 +38,15 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingHorizontal: 16,
-    paddingTop: 40,
-    paddingBottom: 16,
+    paddingHorizontal: hp(2),
+    paddingTop: hp(5),
+    paddingBottom: hp(4),
     backgroundColor: "white",
   },
   backButtonContainer: {
     backgroundColor: "#f5f5f5",
-    padding: 8,
-    borderRadius: 50,
+    padding: hp(1),
+    borderRadius: hp(5),
     justifyContent: "center",
     alignItems: "center",
   },
@@ -61,36 +59,5 @@ const styles = StyleSheet.create({
   logo: {
     width: hp(25),
     height: hp(6),
-  },
-  contentContainer: {
-    padding: 16,
-  },
-  description: {
-    fontSize: 24,
-    lineHeight: 24,
-    marginBottom: 16,
-    marginTop: 16,
-    textAlign: "justify",
-  },
-  contactTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginTop: 16,
-    marginBottom: 8,
-  },
-  contactInfo: {
-    fontSize: 16,
-    lineHeight: 24,
-    marginBottom: 4,
-  },
-  emailLink: {
-    color: "blue",
-  },
-  link: {
-    color: "blue",
-    fontSize: 16,
-    lineHeight: 24,
-    marginBottom: 4,
-    // textDecorationLine: 'underline',
   },
 });

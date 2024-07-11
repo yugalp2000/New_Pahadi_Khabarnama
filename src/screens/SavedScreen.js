@@ -1,16 +1,14 @@
-import { View, Text, TouchableOpacity, Image, FlatList } from "react-native";
 import React, { useCallback, useEffect, useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { View, Text, TouchableOpacity, Image, FlatList, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { heightPercentageToDP as hp } from "react-native-responsive-screen";
 import { BookmarkSquareIcon } from "react-native-heroicons/solid";
 import { StatusBar } from "expo-status-bar";
-import { useColorScheme } from "nativewind";
 import Header from "../components/Header/Header";
 
 export default function SavedScreen() {
-  const { colorScheme, toggleColorScheme } = useColorScheme();
   const navigation = useNavigation();
   const [savedArticles, setSavedArticles] = useState([]);
   const [bookmarkStatus, setBookmarkStatus] = useState([]);
@@ -51,7 +49,7 @@ export default function SavedScreen() {
       if (!isArticleBookmarked) {
         // If the article is not bookmarked, add it to the bookmarked list
         savedArticlesArray.push(item);
-        await AsyncStorage.setItem("savedArticles",JSON.stringify(savedArticlesArray));
+        await AsyncStorage.setItem("savedArticles", JSON.stringify(savedArticlesArray));
         const updatedStatus = [...bookmarkStatus];
         updatedStatus[index] = true;
         setBookmarkStatus(updatedStatus);
@@ -85,12 +83,6 @@ export default function SavedScreen() {
             ? JSON.parse(savedArticles)
             : [];
 
-          // const isArticleBookmarkedList = urlList.map((url) =>
-          //   savedArticlesArray.some((savedArticle) => savedArticle.url === url)
-          // );
-
-          // Set the bookmark status for all items based on the loaded data
-          // setBookmarkStatus(isArticleBookmarkedList);
           setSavedArticles(savedArticlesArray);
         } catch (error) {
           console.log("Error loading saved articles", error);
@@ -98,8 +90,7 @@ export default function SavedScreen() {
       };
 
       loadSavedArticles();
-      // console.log("Pull saved articles from AsyncStorage");
-    }, [navigation, idList]) // Include 'navigation' in the dependencies array if needed
+    }, [navigation, idList])
   );
 
   const clearSavedArticles = async () => {
@@ -115,110 +106,166 @@ export default function SavedScreen() {
   const renderItem = ({ item, index }) => {
     return (
       <TouchableOpacity
-        className="mb-4 space-y-1 "
+        style={styles.itemContainer}
         key={index}
         onPress={() => handleClick(item)}
       >
-        <View className="flex-row justify-start w-[100%]shadow-sm">
+        <View style={styles.contentContainer}>
           {/* Image */}
-          <View className="items-start justify-start w-[20%]">
-            <Image
-              source={{
-                uri:
-                  item.imageUrl ||
-                  "https://images.unsplash.com/photo-1495020689067-958852a7765e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8bmV3c3xlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60",
-              }}
-              style={{ width: hp(9), height: hp(10) }}
-              resizeMode="cover"
-              className="rounded-lg"
-            />
-          </View>
+          <Image
+            source={{
+              uri:
+                item.imageUrl ||
+                "https://images.unsplash.com/photo-1495020689067-958852a7765e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8bmV3c3xlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60",
+            }}
+            style={styles.image}
+            resizeMode="cover"
+          />
 
-          {/* Content */}
-
-          <View className="w-[70%] pl-4 justify-center space-y-1">
+          {/* Text Content */}
+          <View style={styles.textContainer}>
             {/* Author */}
-            <Text className="text-xs font-bold text-gray-900 dark:text-neutral-300">
+            <Text style={styles.author}>
               न्यूज़ डेस्क उत्तराखंड टुडे
             </Text>
 
             {/* Title */}
-            <Text
-              className="text-neutral-800 capitalize max-w-[90%] dark:text-white "
-              style={{
-                fontSize: hp(1.7),
-                fontFamily: "SpaceGroteskBold",
-              }}
-            >
+            <Text style={styles.title}>
               {item.heading.length > 50
                 ? item.heading.slice(0, 50) + "..."
                 : item.heading}
             </Text>
 
             {/* Date */}
-            <Text className="text-xs text-gray-700 dark:text-neutral-300">
+            <Text style={styles.date}>
               {formatDate(item.publishedAt)}
             </Text>
           </View>
 
-          {/* Save */}
-          <View className="w-[10%] justify-center">
-            <TouchableOpacity
-              onPress={() => toggleBookmarkAndSave(item, index)}
-            >
-              <BookmarkSquareIcon color="green" />
-            </TouchableOpacity>
-          </View>
+          {/* Bookmark */}
+          <TouchableOpacity
+            style={styles.bookmarkContainer}
+            onPress={() => toggleBookmarkAndSave(item, index)}
+          >
+            <BookmarkSquareIcon color="green" />
+          </TouchableOpacity>
         </View>
       </TouchableOpacity>
     );
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-white dark:bg-neutral-900">
-      <View style={{ zIndex: 999 }}>
+    <SafeAreaView style={styles.container}>
+      <View style={styles.header}>
         <Header />
       </View>
-      <View className="p-4 bg-white flex-1 dark:bg-neutral-900">
-        <StatusBar style={colorScheme == "dark" ? "light" : "dark"} />
-        {/* Header  */}
 
-        <View className="flex-row justify-between items-center">
-          <Text
-            className="font-bold text-xl text-red-800 dark:text-white"
-            style={{
-              fontFamily: "SpaceGroteskBold",
-            }}
-          >
+      <View style={styles.mainContainer}>
+        <StatusBar style={"dark"} />
+
+        {/* Header */}
+        <View style={styles.headerSection}>
+          <Text style={styles.headerText}>
             सेव्ड न्यूज़
           </Text>
           <TouchableOpacity
             onPress={clearSavedArticles}
-            className="bg-red-800 py-1 px-4 rounded-lg"
+            style={styles.clearButton}
           >
-            <Text
-              className="font-bold text-lg text-white dark:text-white"
-              style={{
-                fontFamily: "SpaceGroteskBold",
-              }}
-            >
+            <Text style={styles.clearButtonText}>
               Clear
             </Text>
           </TouchableOpacity>
         </View>
 
-        <View style={{ marginVertical: hp(2) }} className="space-y-2 ">
-          <FlatList
-            data={savedArticles}
-            showsVerticalScrollIndicator={false}
-            keyExtractor={(item) => item.id.toString()}
-            renderItem={renderItem}
-            contentContainerStyle={{
-              paddingBottom: hp(2),
-            }}
-          />
-        </View>
+        {/* Saved Articles List */}
+        <FlatList
+          data={savedArticles}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.id.toString()}
+          contentContainerStyle={styles.flatListContent}
+        />
       </View>
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: 'white',
+  },
+  header: {
+    zIndex: 999,
+  },
+  mainContainer: {
+    flex: 1,
+    padding: hp(2),
+    backgroundColor: 'white',
+  },
+  headerSection: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: hp(2),
+  },
+  headerText: {
+    fontSize: hp(3),
+    fontWeight: 'bold',
+    color: 'black', // Adjust color as needed
+    fontFamily: 'SpaceGroteskBold',
+  },
+  clearButton: {
+    backgroundColor: '#b30000', // Adjust color as needed
+    paddingHorizontal: hp(2),
+    paddingVertical: hp(1),
+    borderRadius: hp(1),
+  },
+  clearButtonText: {
+    fontSize: hp(2),
+    fontWeight: 'bold',
+    color: 'white',
+    fontFamily: 'SpaceGroteskBold',
+  },
+  itemContainer: {
+    marginBottom: hp(2),
+  },
+  contentContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    shadowOffset: { width: 0, height: 1 },
+  },
+  image: {
+    width: hp(9),
+    height: hp(10),
+    borderRadius: hp(1),
+  },
+  textContainer: {
+    width: '70%',
+    paddingLeft: hp(2),
+  },
+  author: {
+    fontSize: hp(1.5),
+    fontWeight: 'bold',
+    color: '#333', // Adjust color as needed
+  },
+  title: {
+    fontSize: hp(1.7),
+    color: '#333', // Adjust color as needed
+    fontFamily: 'SpaceGroteskBold',
+  },
+  date: {
+    fontSize: hp(1.5),
+    color: '#666', // Adjust color as needed
+  },
+  bookmarkContainer: {
+    width: '10%',
+    justifyContent: 'center',
+  },
+  flatListContent: {
+    paddingBottom: hp(2),
+  },
+});

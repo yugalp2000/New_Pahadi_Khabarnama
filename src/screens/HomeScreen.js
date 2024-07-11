@@ -139,13 +139,13 @@ export default function HomeScreen() {
           {isTrendingLoading || isFetchingRecommendedNews ? (
             <Loading />
           ) : (
-            <View style={{ paddingTop: 20 }}>
+            <View style={{ paddingTop: hp(2) }}>
               <TrendingNews label="Breaking News" data={breakingNews} />
             </View>
           )}
 
           {/* News */}
-          <View className="">
+          <View>
             <MiniHeader label={activeCategory} />
             {isFetchingRecommendedNews || isRecommendedLoading ? (
               <Loading />

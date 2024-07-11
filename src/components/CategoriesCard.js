@@ -1,6 +1,5 @@
-import { View, Text, ScrollView, TouchableOpacity, Image } from "react-native";
+import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from "react-native";
 import React from "react";
-import { categoryData } from "../constants";
 import { heightPercentageToDP as hp } from "react-native-responsive-screen";
 
 export default function CategoriesCard({
@@ -13,21 +12,21 @@ export default function CategoriesCard({
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
-        className="space-x-2" >
+        contentContainerStyle={styles.scrollView}
+      >
         {categories.map((category, index) => {
-          let isActive = category.category == activeCategory;
-          let activeButtonClass = isActive
-            ? "bg-gray-400"
-            : "bg-black dark:bg-neutral-400";
-          let activeTextClass = isActive
-            ? "text-black "
-            : "text-gray-400 dark:text-neutral-600 ";
+          let isActive = category.category === activeCategory;
+          let activeButtonStyle = isActive ? styles.activeButton : styles.inactiveButton;
+          let activeTextStyle = isActive ? styles.activeText : styles.inactiveText;
 
           return (
-            <TouchableOpacity key={index} onPress={() => handleChangeCategory(category.category)} className="flex items-center space-y-1">
-              <View className={ "rounded-full py-2 px-2"}>
-                <Text className={"capitalize " + activeTextClass} style={{
-                    fontSize: hp(2), fontWeight: 700}} >
+            <TouchableOpacity 
+              key={index} 
+              onPress={() => handleChangeCategory(category.category)} 
+              style={styles.touchableOpacity}
+            >
+              <View style={[styles.button, activeButtonStyle]}>
+                <Text style={[styles.text, activeTextStyle]}>
                   {category.category}
                 </Text>
               </View>
@@ -38,3 +37,35 @@ export default function CategoriesCard({
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  scrollView: {
+    paddingHorizontal: hp(1),
+  },
+  touchableOpacity: {
+    alignItems: 'center',
+    marginHorizontal: hp(1),
+  },
+  button: {
+    borderRadius: hp(5), // Adjusted to create a rounded full button
+    paddingVertical: hp(1.5),
+    paddingHorizontal: hp(2),
+  },
+  activeButton: {
+    backgroundColor: 'gray',
+  },
+  inactiveButton: {
+    backgroundColor: 'black',
+  },
+  text: {
+    fontSize: hp(2),
+    fontWeight: '700',
+    textTransform: 'capitalize',
+  },
+  activeText: {
+    color: 'black',
+  },
+  inactiveText: {
+    color: 'white',
+  },
+});

@@ -1,18 +1,20 @@
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
-  ActivityIndicator,
   TouchableOpacity,
   Dimensions,
   Share,
+  ActivityIndicator,
+  StyleSheet,
 } from "react-native";
-import React, { useEffect, useState } from "react";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { WebView } from "react-native-webview";
-import Loading from "../components/Loading";
 import { ChevronLeftIcon, ShareIcon } from "react-native-heroicons/outline";
 import { BookmarkSquareIcon } from "react-native-heroicons/solid";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Loading from "../components/Loading";
+import { heightPercentageToDP as hp } from "react-native-responsive-screen";
 
 const { height, width } = Dimensions.get("window");
 
@@ -27,14 +29,11 @@ export default function NewsDetails() {
       // Check if News Article is already in Storage
       const savedArticles = await AsyncStorage.getItem("savedArticles");
       let savedArticlesArray = savedArticles ? JSON.parse(savedArticles) : [];
-      console.log("Check if the article is already bookmarked");
 
       // Check if the article is already in the bookmarked list
       const isArticleBookmarked = savedArticlesArray.some(
         (savedArticle) => savedArticle.id === item.id
       );
-
-      console.log("Check if the article is already in the bookmarked list >> nd ",savedArticles);
 
       if (!isArticleBookmarked) {
         // If the article is not bookmarked, add it to the bookmarked list
@@ -44,7 +43,6 @@ export default function NewsDetails() {
           JSON.stringify(savedArticlesArray)
         );
         toggleBookmark(true);
-        console.log("Article is bookmarked");
       } else {
         // If the article is already bookmarked, remove it from the list
         const updatedSavedArticlesArray = savedArticlesArray.filter(
@@ -55,7 +53,6 @@ export default function NewsDetails() {
           JSON.stringify(updatedSavedArticlesArray)
         );
         toggleBookmark(false);
-        console.log("Article is removed from bookmarks");
       }
     } catch (error) {
       console.log("Error Saving Article", error);
@@ -64,7 +61,6 @@ export default function NewsDetails() {
 
   const onShare = async () => {
     try {
-      
       const result = await Share.share({
         message: `Uttarakhand Today : ${item.heading}\n${item.posturl}\n\nVia @Uttarakhand Today`,
       });
@@ -97,7 +93,6 @@ export default function NewsDetails() {
         );
 
         toggleBookmark(isArticleBookmarked);
-        console.log("Check if the current article is in bookmarks >> nb 100 ",savedArticles); 
       } catch (error) {
         console.log("Error Loading Saved Articles", error);
       }
@@ -108,32 +103,30 @@ export default function NewsDetails() {
 
   return (
     <>
-      <View className="w-full flex-row justify-between items-center px-4 pt-10 pb-4 bg-white px-4 pt-10 pb-4 bg-white">
-        <View className="bg-gray-100 p-2 rounded-full items-center justify-center">
+      <View style={styles.header}>
+        <View style={styles.iconContainer}>
           <TouchableOpacity onPress={() => navigation.goBack()}>
-            <ChevronLeftIcon size={25} strokeWidth={3} color="gray" />
+            <ChevronLeftIcon size={hp("3%")} strokeWidth={3} color="gray" />
           </TouchableOpacity>
         </View>
 
-        <View className="space-x-3 rounded-full items-center justify-center flex-row">
-          <TouchableOpacity
-            className="bg-gray-100 p-2 rounded-full"
-            onPress={onShare}
-          >
-            <ShareIcon size={25} color="gray" strokeWidth={2} />
+        <View style={styles.iconContainer}>
+          <TouchableOpacity style={styles.iconButton} onPress={onShare}>
+            <ShareIcon size={hp("3%")} color="gray" strokeWidth={2} />
           </TouchableOpacity>
           <TouchableOpacity
-            className="bg-gray-100 p-2 rounded-full"
+            style={styles.iconButton}
             onPress={toggleBookmarkAndSave}
           >
             <BookmarkSquareIcon
-              size={25}
+              size={hp("3%")}
               color={isBookmarked ? "green" : "gray"}
               strokeWidth={2}
             />
           </TouchableOpacity>
         </View>
       </View>
+
       {/* WebView */}
       <WebView
         key={item.id} // Unique key based on the item.posturl
@@ -156,3 +149,30 @@ export default function NewsDetails() {
     </>
   );
 }
+
+const styles = StyleSheet.create({
+  header: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingHorizontal: hp("2%"),
+    paddingTop: hp("3%"),
+    paddingBottom: hp("2%"),
+    backgroundColor: "white",
+  },
+  iconContainer: {
+    backgroundColor: "#f0f0f0",
+    padding: hp("1%"),
+    borderRadius: 999,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  iconButton: {
+    backgroundColor: "#f0f0f0",
+    padding: hp("1%"),
+    borderRadius: 999,
+    marginLeft: hp("1.5%"),
+    alignItems: "center",
+    justifyContent: "center",
+  },
+});
