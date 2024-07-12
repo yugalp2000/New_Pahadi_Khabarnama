@@ -11,13 +11,14 @@
     ],
     "android": {
       "package": "in.pahadikhabarnama.myapp",
-      "versionCode": 2
+      "versionCode": 1
     },
     "ios": {},
     "extra": {
       "eas": {
-        "projectId": "31757fd8-83fb-44f0-85d8-6cba985d3f9f"
+        "projectId": "1765ecc3-0333-44d5-9200-f2342cee974b"
       }
-    }
+    },
+    "owner": "yugal.yopmail"
   }
 }
